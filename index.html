@@ -1,20 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mobile Number</title>
+  </head>
+  <body>
     <div id="root">
-<h1 id="mobile"></h1>
+      <h1 id="mobile">Mobile number will appear here</h1>
+      <button id="requestMobileNumber">Get Mobile Number</button>
     </div>
-</body>
-<script>
-    window.addEventListener("message", (event) => {
-  const data = JSON.parse(event.data);
-  console.log("Data received from React Native:", data);
-  document.getElementById("mobile").innerHTML = data;
-});
-</script>
+
+    <script>
+      // Listen for messages coming from the WebView (React Native)
+      window.addEventListener("message", (event) => {
+        try {
+          const data = JSON.parse(event.data); // Parse the incoming data
+          console.log("Data received from React Native:", data);
+
+          // Update the DOM with the received Mobile Number
+          if (data.Mobile_Number) {
+            document.getElementById("mobile").innerText = data.Mobile_Number;
+          }
+        } catch (error) {
+          console.error("Error parsing message data:", error);
+        }
+      });
+
+      // Button click to request the mobile number from React Native
+      document
+        .getElementById("requestMobileNumber")
+        .addEventListener("click", () => {
+          // Send a message to React Native requesting the mobile number
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({ request: "getMobileNumber" })
+          );
+        });
+    </script>
+  </body>
 </html>
